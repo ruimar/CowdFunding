@@ -1,0 +1,43 @@
+package Server;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class LigaCliente implements Runnable{
+	
+	LigaCliente(){
+		new Thread(this, "").start();
+	}
+
+	@Override
+	public void run() {
+
+		ServerSocket ligTCP = null;
+		
+		try {
+			ligTCP = new ServerSocket(9090);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		while(true){
+			
+			Socket socket = null;
+			try {
+				socket = ligTCP.accept();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			new FuncCliente(ligTCP, socket);
+			
+		}
+		
+	}
+	
+	
+	
+}

@@ -1,0 +1,17 @@
+package Server;
+
+public class LigaCliente implements Runnable{
+	
+	LigacaoCliente(){
+		new Thread(this, "").start();
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+}

@@ -1,0 +1,13 @@
+package RMIClient;
+
+import rmiinterface.*;
+
+public class RMIClient {
+	
+	String name = "//127.0.0.1:25055/calc";
+	
+	public RMIClient(){
+		
+	}
+	
+}

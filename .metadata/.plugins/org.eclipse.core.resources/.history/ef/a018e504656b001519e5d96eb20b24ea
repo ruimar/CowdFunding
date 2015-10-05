@@ -1,0 +1,5 @@
+package SevidorRMI;
+
+public class RMIInterface {
+
+}

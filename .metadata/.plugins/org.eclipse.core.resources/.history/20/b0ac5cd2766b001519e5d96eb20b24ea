@@ -1,0 +1,22 @@
+package Server;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class FuncCliente implements Runnable{
+	
+	FuncCliente(ServerSocket TCP, Socket socket){
+		
+		this.TCP = TCP;
+		this.socket = socket;
+		new Thread(this, "").start();
+		
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
