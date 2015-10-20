@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Convert local variable &apos;ComunicacaoCliente.ligacao().oos&apos; in &apos;ComunicacaoCliente.ligacao()&apos; to field&#x0D;&#x0A;- Original project: &apos;Cliente&apos;&#x0D;&#x0A;- Original element: &apos;ComunicacaoCliente.ligacao().oos&apos;&#x0D;&#x0A;- Field name: &apos;oos&apos;&#x0D;&#x0A;- Initialize field in method&#x0D;&#x0A;- Declared visibility: &apos;private&apos;" description="Convert local variable &apos;oos&apos; to field" final="false" flags="2" id="org.eclipse.jdt.ui.promote.temp" initialize="1" input="/src&lt;{ComunicacaoCliente.java" name="oos" selection="2013 34" stamp="1445293295115" static="false" version="1.0" visibility="2"/>
+</session>

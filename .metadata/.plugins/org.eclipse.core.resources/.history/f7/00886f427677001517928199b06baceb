@@ -1,0 +1,133 @@
+package Server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
+import RMIClient.RMIClient;
+
+public class FuncCliente implements Runnable{
+	
+	ServerSocket TCP;
+	Socket socket;
+	
+	FuncCliente(ServerSocket TCP, Socket socket){
+		
+		this.TCP = TCP;
+		this.socket = socket;
+		new Thread(this, "").start();
+		
+	}
+	
+	public class Pedido{
+		
+		int key;
+		Object object;
+		
+		
+		Pedido(int key, Object obj){
+			
+			this.key=key;
+			this.object = obj;
+			
+		}
+		
+	}
+	
+	
+	public class User{
+		
+		String username;
+		String password;
+		public User(String username, String password) {
+			super();
+			this.username = username;
+			this.password = password;
+		}
+		public String getUsername() {
+			return username;
+		}
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		
+		
+	}
+	
+	@Override
+	public void run() {
+		
+		System.out.println("Novo Cliente");
+		
+		try {
+			getRequests();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		
+	}
+	
+	private void getRequests() throws ClassNotFoundException, IOException, NotBoundException{
+		
+		PipedInputStream pin = new PipedInputStream();
+		PipedOutputStream pout = new PipedOutputStream(pin);
+		ObjectInputStream ois = new ObjectInputStream(pin);
+
+		
+		while(true){
+			
+			System.out.println("teste");
+			
+			Pedido obj = (Pedido) ois.readObject();
+			
+			Pedido request = new Pedido(obj.key, obj.object);
+
+			System.out.println(obj.key);
+
+			handleRequest(request);
+			
+		}
+		
+		
+	}
+	
+	private void handleRequest(Pedido request) throws MalformedURLException, RemoteException, NotBoundException {
+		
+		RMIClient rmiconn = new RMIClient();
+		
+		if(request.key==1){
+			
+			System.out.println("entrou");
+			
+			User userdata = (User) request.object;
+			
+			rmiconn.login(userdata.username, userdata.password);
+			
+		}
+	}
+	
+}
+

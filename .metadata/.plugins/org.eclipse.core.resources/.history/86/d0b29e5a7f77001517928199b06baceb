@@ -1,0 +1,109 @@
+package Server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
+import RMIClient.RMIClient;
+
+public class FuncCliente extends Thread{
+	
+	ServerSocket TCP;
+	Socket socket;
+	ObjectOutputStream pout;
+	ObjectInputStream ois;
+	
+	FuncCliente( Socket socket){
+		
+		this.TCP = TCP;
+		this.socket = socket;
+		
+		
+		try {
+			pout = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
+		} catch (Exception e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("passei");
+			
+		}
+		new Thread(this, "").start();
+		
+	}
+	
+	@Override
+	public void run() {
+		
+		System.out.println("Novo Cliente");
+		
+	
+			getRequests();
+			
+			System.out.println("Novo Cliente");
+			
+			
+			
+
+			System.out.println("passei");
+			while(true){
+				System.out.println("passei");
+				
+				Pedido obj = null;
+				try {
+					obj = (Pedido) ois.readObject();
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				System.out.println(obj.key);
+
+				try {
+					handleRequest(obj);
+				} catch (MalformedURLException | RemoteException
+						| NotBoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		
+	}
+	
+	private void getRequests() {
+		
+		
+		
+	}
+	
+	private void handleRequest(Pedido request) throws MalformedURLException, RemoteException, NotBoundException {
+		
+		RMIClient rmiconn = new RMIClient();
+		
+		if(request.key==1){
+			
+			System.out.println("entrou");
+			
+			User userdata = (User) request.object;
+			
+			rmiconn.login(userdata.getUsername(), userdata.getPassword());
+			
+		}
+	}
+	
+}
+

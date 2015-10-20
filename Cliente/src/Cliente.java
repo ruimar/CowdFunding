@@ -26,21 +26,7 @@ public class Cliente {
 			e.printStackTrace();
 		}
 		
-		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		new ComunicacaoCliente(socket, in, out, ip, port);
+		new ComunicacaoCliente(socket, ip, port);
 		
 	}
 	

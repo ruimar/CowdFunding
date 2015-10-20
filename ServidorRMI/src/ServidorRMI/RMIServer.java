@@ -1,15 +1,10 @@
 package ServidorRMI;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 
 import rmiinterface.RMIInterface;
 
@@ -46,9 +41,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIInterface {
 
 
 	@Override
-	public String helloWorld() {
-		System.out.println("Hello World!");
-		return "lel";
+	public void login(String username, String password) {
+		
+		System.out.println(username+password);
+		
+		//checkar aqui se faz login na bd
+		
 	}
 	
 	//funcionalidades do RMI

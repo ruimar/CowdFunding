@@ -1,0 +1,121 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+
+public class ComunicacaoCliente implements Runnable{
+	
+	Socket socket;
+	BufferedReader in;
+	PrintWriter out;
+	String ip;
+	int port;
+	Scanner sc;
+	private ObjectOutputStream oos;
+
+	ComunicacaoCliente(Socket socket, BufferedReader in, PrintWriter out, String ip, int port) {
+		this.socket = socket;
+		this.in = in;
+		this.out = out;
+		this.ip = ip;
+		this.port = port;
+		new Thread(this, "").start();
+	}
+	
+	public class Pedido{
+		
+		int key;
+		Object object;
+		
+		
+		Pedido(int key, Object obj){
+			
+			this.key=key;
+			this.object = obj;
+			
+		}
+		
+	}
+	
+	public class User{
+		
+		String username;
+		String password;
+		public User(String username, String password) {
+			super();
+			this.username = username;
+			this.password = password;
+		}
+		public String getUsername() {
+			return username;
+		}
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		
+		
+	}
+	
+	@Override
+	public void run() {
+		
+		sc = new Scanner(System.in);
+		
+		System.out.println("Bem-vindo ao Kickstarter!");
+		
+		System.out.println("Escolha a opcao:\n1-Login\n2-Registar");
+		
+		int op = sc.nextInt();
+		String username;
+		String password;
+		
+		if(op==1){
+			
+			System.out.println("Username: ");
+			username = sc.nextLine();
+			System.out.println("Password: ");
+			password = sc.nextLine();
+			
+			User userdata = new User(username, password);
+			
+			Pedido request = new Pedido (1, userdata);
+			
+			try {
+				ligacao(request);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
+	
+	private void ligacao(Pedido request) throws UnknownHostException, IOException{
+		
+		PipedInputStream pin = new PipedInputStream();
+		PipedOutputStream pout = new PipedOutputStream(pin);
+		
+		oos = new ObjectOutputStream(pout);
+		
+		oos.writeObject(request);
+		
+	}
+	
+	
+	
+}

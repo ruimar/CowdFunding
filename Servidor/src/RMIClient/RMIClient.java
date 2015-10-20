@@ -15,12 +15,11 @@ public class RMIClient {
 		
 	}
 
-	public String helloWorld() throws MalformedURLException, RemoteException, NotBoundException {
+	public void login(String username, String password) throws MalformedURLException, RemoteException, NotBoundException {
 		
 		RMIInterface ci = (RMIInterface) Naming.lookup(name);
-		String temp = ci.helloWorld();
+		ci.login(username, password);
 		
-		return temp;
 		
 	}
 	

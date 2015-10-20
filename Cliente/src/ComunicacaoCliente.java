@@ -1,71 +1,81 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
 
-public class ComunicacaoCliente implements Runnable{
+public class ComunicacaoCliente extends Thread{
 	
 	Socket socket;
-	BufferedReader in;
-	PrintWriter out;
+	
 	String ip;
 	int port;
 	Scanner sc;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 
-	ComunicacaoCliente(Socket socket, BufferedReader in, PrintWriter out, String ip, int port) {
+	ComunicacaoCliente(Socket socket, String ip, int port) {
 		this.socket = socket;
-		this.in = in;
-		this.out = out;
 		this.ip = ip;
 		this.port = port;
+		try {
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
+		} catch (Exception e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("passei");
+			
+		}
 		new Thread(this, "").start();
 	}
+	
 	
 	@Override
 	public void run() {
 		
-		try {
-			ligacao("hello");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		sc = new Scanner(System.in);
+		
+		System.out.println("Bem-vindo ao Kickstarter!");
+		
+		System.out.println("Escolha a opcao:\n1-Login\n2-Registar");
+		
+		int op = sc.nextInt();
+		String username;
+		String password;
+		
+		if(op==1){
+			
+			System.out.print("Username: ");
+			username = sc.next();
+			System.out.print("Password: ");
+			password = sc.next();
+						
+			User userdata = new User(username, password);
+			
+			Pedido request = new Pedido (1, userdata);
+			
+			try {
+				ligacao(request);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 	}
 	
-	private String ligacao(String pedido) throws UnknownHostException, IOException{
+	private void ligacao(Pedido request) throws UnknownHostException, IOException, ClassNotFoundException{
 		
-		socket = new Socket(ip, port);
-		String resposta = null;
-		
-		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		out.println(pedido);
-		
-		try {
-            resposta = in.readLine();
-
-        } catch (IOException e) {
-        	resposta = ligacao(pedido);
-        }
-		
-		return resposta;
+		oos.writeObject(request);
+		ois.readObject();
 		
 	}
 	

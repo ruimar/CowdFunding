@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 public interface RMIInterface extends Remote{
 	
-	public String helloWorld() throws RemoteException;
+	public void login(String username, String password) throws RemoteException;
 	//funcionalidades do RMI
 	
 }

@@ -1,0 +1,101 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+
+public class ComunicacaoCliente implements Runnable{
+	
+	Socket socket;
+	BufferedReader in;
+	PrintWriter out;
+	String ip;
+	int port;
+	Scanner sc;
+
+	ComunicacaoCliente(Socket socket, BufferedReader in, PrintWriter out, String ip, int port) {
+		this.socket = socket;
+		this.in = in;
+		this.out = out;
+		this.ip = ip;
+		this.port = port;
+		new Thread(this, "").start();
+	}
+	
+	public class User{
+		
+		String user;
+		String pass;
+		
+		User(String username,String password){
+			
+			this.user=username;
+			this.pass=password;
+			
+		}
+		
+	}
+	
+	@Override
+	public void run() {
+		
+		sc = new Scanner(System.in);
+		
+		System.out.println("Bem-vindo ao Kickstarter!");
+		
+		System.out.println("Escolha a opcao:\n1-Login\n2-Registar");
+		
+		int op = sc.nextInt();
+		String username;
+		String password;
+		
+		if(op==1){
+			
+			System.out.println("Username: ");
+			username = sc.nextLine();
+			System.out.println("Password: ");
+			password = sc.nextLine();
+			
+			new User (username, password);
+			
+		}
+		
+	}
+	
+	private String ligacao(String pedido) throws UnknownHostException, IOException{
+		
+		String resposta = null;
+		
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		out.println(pedido);
+		
+		try {
+            resposta = in.readLine();
+
+        } catch (IOException e) {
+        	resposta = ligacao(pedido);
+        }
+		
+		return resposta;
+		
+	}
+	
+	
+	
+}
